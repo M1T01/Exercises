@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mi Rutina Gym PWA</title>
+    
+    <!-- Seguridad: Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://raw.githubusercontent.com https://cdn-icons-png.flaticon.com data:; style-src 'self' 'unsafe-inline' https://cdn-uicons.flaticon.com; font-src https://cdn-uicons.flaticon.com; script-src 'self' 'unsafe-inline';">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="theme-color" content="#18181b">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2964/2964514.png">
+
+    <!-- Flaticon UIcons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    <style>
+        :root {
+            --bg-color: #18181b;
+            --card-bg: #27272a;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --goat-color: #ef4444; /* Rojo para GOAT */
+            --effective-color: #f97316; /* Naranja para Most Effective */
+            --good-color: #eab308; /* Amarillo para Good */
+            --cardio-color: #3b82f6;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.5; }
+        
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { font-size: 1.8rem; margin-bottom: 5px; }
+        header p { color: var(--text-muted); font-size: 0.9rem; }
+        header i { font-size: 2rem; color: var(--goat-color); }
+
+        .day-container { margin-bottom: 40px; }
+        .day-title { font-size: 1.4rem; border-bottom: 2px solid var(--card-bg); padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        .routine-block { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .routine-block.special { border-left: 4px solid var(--cardio-color); }
+        
+        .exercise-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; background: #3f3f46; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        
+        .exercise-info { flex: 1; }
+        .exercise-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
+        .exercise-info p { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-top: 5px; }
+        .badge.goat { background: rgba(239, 68, 68, 0.2); color: var(--goat-color); }
+        .badge.effective { background: rgba(249, 115, 22, 0.2); color: var(--effective-color); }
+        .badge.good { background: rgba(234, 179, 8, 0.2); color: var(--good-color); }
+
+        /* Fallback icon for broken github images */
+        img:invalid { display: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <i class="fi fi-rr-gym"></i>
+        <h1>Plan de Tonificación</h1>
+        <p>Alta Proteína | Baja en Carbs | 6 Ejercicios</p>
+    </header>
+
+    <div id="app"></div>
+
+    <script>
+        // Datos de la rutina basados en la Tier List
+        const repoBaseUrl = "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/master/exercises/";
+        
+        const routine = [
+            {
+                day: "Día 1: Pecho y Espalda",
+                icon: "fi-rr-dumbbell",
+                exercises: [
+                    { name: "Lat Pulldown", tier: "GOAT", img: "lat-pulldown.gif", class: "goat", reps: "4 series x 10-12 reps" },
+                    { name: "Dumbbell Bench Press", tier: "Most Effective", img: "dumbbell-bench-press.gif", class: "effective", reps: "4 series x 10-12 reps" },
+                    { name: "Cable Row", tier: "Most Effective", img: "cable-row.gif", class: "effective", reps: "3 series x 12 reps" },
+                    { name: "Incline Dumbbell Press", tier: "Most Effective", img: "incline-dumbbell-press.gif", class: "effective", reps: "3 series x 10-12 reps" },
+                    { name: "Machine Chest Fly", tier: "Most Effective", img: "machine-chest-fly.gif", class: "effective", reps: "3 series x 15 reps" },
+                    { name: "Single Arm Dumbbell Row", tier: "Good", img: "dumbbell-row.gif", class: "good", reps: "3 series x 12 reps por brazo" }
+                ]
+            },
+            {
+                day: "Día 2: Piernas",
+                icon: "fi-rr-shoe-prints",
+                exercises: [
+                    { name: "Leg Extension", tier: "GOAT", img: "leg-extension.gif", class: "goat", reps: "4 series x 15 reps" },
+                    { name: "Leg Press", tier: "Most Effective", img: "leg-press.gif", class: "effective", reps: "4 series x 10-12 reps" },
+                    { name: "Dumbbell Squat (Goblet)", tier: "Good", img: "goblet-squat.gif", class: "good", reps: "4 series x 12 reps" },
+                    { name: "Seated Leg Curl", tier: "Most Effective", img: "seated-leg-curl.gif", class: "effective", reps: "3 series x 12-15 reps" },
+                    { name: "Standing Calf Raise", tier: "Most Effective", img: "standing-calf-raise.gif", class: "effective", reps: "4 series x 20 reps" },
+                    { name: "Hip Adduction", tier: "Good", img: "hip-adduction.gif", class: "good", reps: "3 series x 15 reps" }
+                ]
+            },
+            {
+                day: "Día 3: Full Body",
+                icon: "fi-rr-flame",
+                exercises: [
+                    { name: "Lat Pulldown", tier: "GOAT", img: "lat-pulldown.gif", class: "goat", reps: "3 series x 12 reps" },
+                    { name: "Dumbbell Bench Press", tier: "Most Effective", img: "dumbbell-bench-press.gif", class: "effective", reps: "3 series x 12 reps" },
+                    { name: "Leg Press", tier: "Most Effective", img: "leg-press.gif", class: "effective", reps: "3 series x 12 reps" },
+                    { name: "Dumbbell Lateral Raise", tier: "Most Effective", img: "dumbbell-lateral-raise.gif", class: "effective", reps: "4 series x 15 reps" },
+                    { name: "Tricep Pushdown", tier: "Most Effective", img: "tricep-pushdown.gif", class: "effective", reps: "3 series x 15 reps" },
+                    { name: "Dumbbell Bicep Curl", tier: "Most Effective", img: "dumbbell-bicep-curl.gif", class: "effective", reps: "3 series x 12 reps" }
+                ]
+            },
+            {
+                day: "Día 4: Bíceps y Tríceps (Opcional)",
+                icon: "fi-rr-body-building",
+                exercises: [
+                    { name: "Tricep Pushdown (Bar)", tier: "Most Effective", img: "tricep-pushdown-bar.gif", class: "effective", reps: "4 series x 12 reps" },
+                    { name: "Dumbbell Bicep Curl", tier: "Most Effective", img: "dumbbell-bicep-curl.gif", class: "effective", reps: "4 series x 12 reps" },
+                    { name: "Overhead Cable Tricep Ext.", tier: "Most Effective", img: "overhead-cable-tricep.gif", class: "effective", reps: "3 series x 12 reps" },
+                    { name: "Dumbbell Hammer Curl", tier: "Most Effective", img: "hammer-curl.gif", class: "effective", reps: "3 series x 12 reps" },
+                    { name: "Cable Curl", tier: "Good", img: "cable-curl.gif", class: "good", reps: "3 series x 15 reps" },
+                    { name: "Tricep Pushdown (Rope)", tier: "Good", img: "tricep-pushdown-rope.gif", class: "good", reps: "3 series x 15 reps" }
+                ]
+            }
+        ];
+
+        const app = document.getElementById('app');
+
+        routine.forEach(day => {
+            let html = `<div class="day-container">
+                <h2 class="day-title"><i class="fi ${day.icon}"></i> ${day.day}</h2>
+                
+                <div class="routine-block special">
+                    <div class="exercise-img" style="background: transparent"><i class="fi fi-rr-person-running" style="color: var(--cardio-color);"></i></div>
+                    <div class="exercise-info">
+                        <h3>Calentamiento</h3>
+                        <p>5 minutos de movilidad articular</p>
+                    </div>
+                </div>`;
+
+            day.exercises.forEach(ex => {
+                // Función fallback: si la imagen de GitHub no existe, carga un ícono genérico de Flaticon
+                html += `
+                <div class="routine-block">
+                    <img src="${repoBaseUrl}${ex.img}" alt="${ex.name}" class="exercise-img" loading="lazy" onerror="this.onerror=null; this.outerHTML='<div class=\\'exercise-img\\'><i class=\\'fi fi-rr-gym\\'></i></div>';">
+                    <div class="exercise-info">
+                        <h3>${ex.name}</h3>
+                        <p><i class="fi fi-rr-rotate-right"></i> ${ex.reps}</p>
+                        <span class="badge ${ex.class}">${ex.tier}</span>
+                    </div>
+                </div>`;
+            });
+
+            html += `
+                <div class="routine-block special">
+                    <div class="exercise-img" style="background: transparent"><i class="fi fi-rr-heart-rate" style="color: var(--cardio-color);"></i></div>
+                    <div class="exercise-info">
+                        <h3>Cardio Final</h3>
+                        <p>20 minutos (Cinta, Elíptica o Bici)</p>
+                    </div>
+                </div>
+            </div>`;
+
+            app.innerHTML += html;
+        });
+
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado', reg))
+                    .catch(err => console.error('Error al registrar SW', err));
+            });
+        }
+    </script>
+</body>
+</html>
