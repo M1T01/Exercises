@@ -336,7 +336,7 @@
    ---------------------------------------------------------
    `file` = nombre base del archivo, sin extensión.
    El GIF estará en  ./videos/{file}.gif
-   La imagen en       ./images/{file}.jpg
+   La imagen en      ./images/{file}.jpg
    ========================================================= */
 const RUTINA = [
   {
@@ -447,12 +447,12 @@ function progressFor(dayIdx) {
 
 function renderTabs() {
   $tabs.innerHTML = RUTINA.map(d => {
-    const { done: d, total } = progressFor(d.dia);
+    const { done: dCount, total } = progressFor(d.dia);
     const selected = d.dia === activeDay;
     return `
       <button class="day-tab" role="tab" aria-selected="${selected}" data-day="${d.dia}">
         <span class="tab-label">Día ${d.dia}</span>
-        <span class="tab-progress">${d}/${total}</span>
+        <span class="tab-progress">${dCount}/${total}</span>
       </button>
     `;
   }).join('');
@@ -553,7 +553,7 @@ function renderDay() {
     </section>
   `;
 
-  // Wiring
+  // Wiring checks
   $main.querySelectorAll('.check-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -566,10 +566,12 @@ function renderDay() {
     });
   });
 
+  // Wiring Lightbox
   $main.querySelectorAll('.thumb').forEach(th => {
     th.addEventListener('click', () => openLightbox(th.dataset.gif, th.dataset.img, th.dataset.name));
   });
 
+  // Reset
   const reset = document.getElementById('resetDay');
   if (reset) {
     reset.addEventListener('click', () => {
@@ -580,18 +582,22 @@ function renderDay() {
     });
   }
 
-  // Fallback de imágenes
+  // --- SOLUCIÓN FALLBACK DE IMÁGENES ---
   $main.querySelectorAll('img.ex-gif').forEach(img => {
-    img.addEventListener('error', () => {
-      const th = img.closest('.thumb');
-      if (th) th.classList.add('failed');
-      // Fallback a la imagen estática
+    img.addEventListener('error', function handleError() {
       const thumb = img.closest('.thumb');
-      if (thumb && !thumb.dataset.triedImg) {
+      if (!thumb) return;
+
+      if (!thumb.dataset.triedImg) {
+        // 1. Falló el GIF. Intentamos con el JPG.
         thumb.dataset.triedImg = '1';
         img.src = thumb.dataset.img;
+      } else {
+        // 2. También falló el JPG. Ocultamos y mostramos el icono.
+        thumb.classList.add('failed');
+        img.removeEventListener('error', handleError);
       }
-    }, { once: true });
+    });
   });
 }
 
@@ -603,18 +609,18 @@ const $lbImg = document.getElementById('lightboxImg');
 const $lbClose = document.getElementById('lightboxClose');
 
 function openLightbox(gif, img, name) {
+  // Intentar GIF, si falla que el error nativo actúe? Por simplicidad cargamos la misma fuente
   $lbImg.src = gif;
   $lbImg.alt = name;
   $lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeLightbox() {
-  $lb.classList.remove('open');
-  $lbImg.src = '';
+  $lb.classList.remove('open');$lbImg.src = '';
   document.body.style.overflow = '';
 }
 $lbClose.addEventListener('click', closeLightbox);
-$lb.addEventListener('click', (e) => { if (e.target === $lb) closeLightbox(); });
+$lb.addEventListener('click', (e) => { if (e.target ===$lb) closeLightbox(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
 /* =========================================================
