@@ -438,11 +438,11 @@ function badgeLabel(badge) {
 }
 
 function progressFor(dayIdx) {
-  const day = RUTINA.find(d => d.dia === dayIdx);
+  const day = RUTINA.find(x => x.dia === dayIdx);
   if (!day) return { done: 0, total: 0 };
-  let d = 0;
-  day.ejercicios.forEach((_, i) => { if (isDone(dayIdx, i)) d++; });
-  return { done: d, total: day.ejercicios.length };
+  let count = 0;
+  day.ejercicios.forEach((_, i) => { if (isDone(dayIdx, i)) count++; });
+  return { done: count, total: day.ejercicios.length };
 }
 
 function renderTabs() {
