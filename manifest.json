@@ -1,0 +1,17 @@
+{
+  "name": "Rutina de Tonificación Gym",
+  "short_name": "Mi Rutina",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#18181b",
+  "theme_color": "#18181b",
+  "description": "Plan de entrenamiento de 4 días enfocado en pérdida de peso y tonificación.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2964/2964514.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
