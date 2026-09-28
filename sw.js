@@ -1,5 +1,5 @@
 /* Service Worker · Rutina Gym Pro */
-const CACHE = 'gym-pro-v1';
+const CACHE = 'gym-pro-v1.1';
 
 const PRECACHE = [
   './',
@@ -10,7 +10,9 @@ const PRECACHE = [
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(c => c.addAll(PRECACHE))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -31,10 +33,14 @@ self.addEventListener('fetch', (e) => {
       caches.match(e.request).then(hit => {
         if (hit) return hit;
         return fetch(e.request).then(res => {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
+          // Solo guardamos en caché si la imagen/video realmente cargó con éxito
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, copy));
+          }
           return res;
-        }).catch(() => caches.match('./index.html'));
+        }); 
+        // Eliminé el catch que devolvía 'index.html', ya que no tiene sentido devolver un HTML a una etiqueta <img>
       })
     );
     return;
@@ -43,8 +49,11 @@ self.addEventListener('fetch', (e) => {
   // Network-first para el resto (con fallback a cache)
   e.respondWith(
     fetch(e.request).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(e.request, copy));
+      // Evitar guardar respuestas fallidas en caché
+      if (res && res.status === 200) {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy));
+      }
       return res;
     }).catch(() => caches.match(e.request))
   );
