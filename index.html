@@ -1,176 +1,638 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mi Rutina Gym PWA A</title>
-    
-    <!-- Seguridad: Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https://raw.githubusercontent.com https://cdn-icons-png.flaticon.com data:; style-src 'self' 'unsafe-inline' https://cdn-uicons.flaticon.com; font-src https://cdn-uicons.flaticon.com; script-src 'self' 'unsafe-inline';">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-    <meta name="theme-color" content="#18181b">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2964/2964514.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Rutina Gym Pro · Tier List Training</title>
 
-    <!-- Flaticon UIcons -->
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+<!-- Descripción -->
+<meta name="description" content="Rutina de gimnasio de 4 días enfocada en hipertrofia, tonificación y pérdida de grasa. Pecho, espalda, piernas y brazos con animaciones de técnica.">
+<meta name="theme-color" content="#09090b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym Pro">
 
-    <style>
-        :root {
-            --bg-color: #18181b;
-            --card-bg: #27272a;
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --goat-color: #ef4444; /* Rojo para GOAT */
-            --effective-color: #f97316; /* Naranja para Most Effective */
-            --good-color: #eab308; /* Amarillo para Good */
-            --cardio-color: #3b82f6;
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); padding: 20px; line-height: 1.5; }
-        
-        header { text-align: center; margin-bottom: 30px; }
-        header h1 { font-size: 1.8rem; margin-bottom: 5px; }
-        header p { color: var(--text-muted); font-size: 0.9rem; }
-        header i { font-size: 2rem; color: var(--goat-color); }
+<!-- Open Graph -->
+<meta property="og:title" content="Rutina Gym Pro · Tier List">
+<meta property="og:description" content="Rutina de 4 días enfocada en hipertrofia y pérdida de grasa.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="./images/2330-LEprlgG.jpg">
+<meta name="twitter:card" content="summary_large_image">
 
-        .day-container { margin-bottom: 40px; }
-        .day-title { font-size: 1.4rem; border-bottom: 2px solid var(--card-bg); padding-bottom: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        
-        .routine-block { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .routine-block.special { border-left: 4px solid var(--cardio-color); }
-        
-        .exercise-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; background: #3f3f46; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        
-        .exercise-info { flex: 1; }
-        .exercise-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
-        .exercise-info p { font-size: 0.85rem; color: var(--text-muted); }
-        
-        .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-top: 5px; }
-        .badge.goat { background: rgba(239, 68, 68, 0.2); color: var(--goat-color); }
-        .badge.effective { background: rgba(249, 115, 22, 0.2); color: var(--effective-color); }
-        .badge.good { background: rgba(234, 179, 8, 0.2); color: var(--good-color); }
+<!-- Iconos -->
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2964/2964514.png">
+<link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2964/2964514.png">
 
-        /* Fallback icon for broken github images */
-        img:invalid { display: none; }
-    </style>
+<!-- Tailwind + Fuente -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html, body {
+    background: #09090b;
+    color: #f4f4f5;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+  body {
+    padding-bottom: calc(2rem + var(--safe-bottom));
+  }
+
+  /* Badges */
+  .badge-goat      { background: linear-gradient(135deg,#ef4444,#dc2626); color:#fff; }
+  .badge-effective { background: linear-gradient(135deg,#f97316,#ea580c); color:#fff; }
+  .badge-good      { background: linear-gradient(135deg,#eab308,#ca8a04); color:#000; }
+
+  /* Card hover */
+  .card-hover {
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  @media (hover: hover) {
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px rgba(0,0,0,.7);
+      border-color: rgba(239,68,68,.35);
+    }
+  }
+  .card-hover:active { transform: scale(0.99); }
+
+  /* Thumbnail */
+  .thumb {
+    position: relative;
+    width: 5.5rem;
+    min-width: 5.5rem;
+    height: 5.5rem;
+    background: #18181b;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  @media (min-width: 640px) {
+    .thumb { width: 6.5rem; min-width: 6.5rem; height: 6.5rem; }
+  }
+  .thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    display: block;
+    transition: transform .3s ease;
+  }
+  .card-hover:hover .thumb img { transform: scale(1.05); }
+
+  .thumb .ph {
+    position: absolute; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    color: #52525b;
+  }
+  .thumb .ph svg { width: 26px; height: 26px; }
+  .thumb.failed img { display: none; }
+  .thumb.failed .ph { display: flex; }
+
+  /* Icon boxes */
+  .icon-box {
+    width: 2.5rem; height: 2.5rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border-radius: .75rem;
+    background: rgba(255,255,255,.05);
+  }
+  .icon-box svg { width: 20px; height: 20px; }
+
+  /* Day tabs */
+  .day-tab {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: .6rem .4rem;
+    border-radius: .75rem;
+    font-size: .8rem;
+    font-weight: 600;
+    color: #a1a1aa;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all .2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .day-tab .tab-label { line-height: 1; }
+  .day-tab .tab-progress {
+    font-size: .65rem;
+    font-weight: 500;
+    color: #71717a;
+    line-height: 1;
+  }
+  .day-tab[aria-selected="true"] {
+    background: linear-gradient(135deg, rgba(239,68,68,.18), rgba(249,115,22,.12));
+    border-color: rgba(239,68,68,.4);
+    color: #fff;
+  }
+  .day-tab[aria-selected="true"] .tab-progress { color: #fca5a5; }
+
+  /* Progress bar */
+  .progress-track {
+    height: 6px;
+    background: #18181b;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ef4444, #f97316);
+    border-radius: 999px;
+    transition: width .4s cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 0 12px rgba(249,115,22,.5);
+  }
+
+  /* Check button */
+  .check-btn {
+    width: 2rem; height: 2rem;
+    border-radius: 999px;
+    border: 2px solid #3f3f46;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all .2s ease;
+    background: transparent;
+    color: transparent;
+  }
+  .check-btn svg { width: 14px; height: 14px; stroke-width: 3.5; }
+  .check-btn[aria-checked="true"] {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(34,197,94,.5);
+  }
+  .check-btn:active { transform: scale(.9); }
+
+  /* Card completed state */
+  .ex-card.done { opacity: .55; }
+  .ex-card.done .ex-name { text-decoration: line-through; text-decoration-color: rgba(34,197,94,.6); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.92);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1.25rem;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 1rem;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,.9);
+    animation: zoomIn .25s ease;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: calc(1rem + var(--safe-top));
+    right: 1rem;
+    width: 2.75rem; height: 2.75rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* Fade-in */
+  .fade-in { animation: fadeIn .3s ease both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scrollbar hide */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+</style>
 </head>
-<body>
+<body class="antialiased">
 
-    <header>
-        <i class="fi fi-rr-gym"></i>
-        <h1>Plan de Tonificación</h1>
-        <p>Alta Proteína | Baja en Carbs | 6 Ejercicios</p>
-    </header>
+<!-- ================= HEADER ================= -->
+<header class="pt-[calc(2rem+var(--safe-top))] pb-4 px-4 text-center max-w-3xl mx-auto">
+  <div class="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-zinc-900/80 border border-zinc-800 rounded-full">
+    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span class="text-[11px] font-semibold text-zinc-300 uppercase tracking-wider">Rutina activa</span>
+  </div>
 
-    <div id="app"></div>
+  <h1 class="text-4xl sm:text-5xl font-black mb-3 tracking-tight leading-[1.05]">
+    <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-orange-500 to-amber-500">Tier List</span>
+    <br class="sm:hidden">
+    <span class="text-white"> Training</span>
+  </h1>
 
-    <script>
-        // Datos de la rutina basados en la Tier List
-        const repoBaseUrl = "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/master/exercises/";
-        
-        const routine = [
-            {
-                day: "Día 1: Pecho y Espalda",
-                icon: "fi-rr-dumbbell",
-                exercises: [
-                    { name: "Lat Pulldown", tier: "GOAT", img: "lat-pulldown.gif", class: "goat", reps: "4 series x 10-12 reps" },
-                    { name: "Dumbbell Bench Press", tier: "Most Effective", img: "dumbbell-bench-press.gif", class: "effective", reps: "4 series x 10-12 reps" },
-                    { name: "Cable Row", tier: "Most Effective", img: "cable-row.gif", class: "effective", reps: "3 series x 12 reps" },
-                    { name: "Incline Dumbbell Press", tier: "Most Effective", img: "incline-dumbbell-press.gif", class: "effective", reps: "3 series x 10-12 reps" },
-                    { name: "Machine Chest Fly", tier: "Most Effective", img: "machine-chest-fly.gif", class: "effective", reps: "3 series x 15 reps" },
-                    { name: "Single Arm Dumbbell Row", tier: "Good", img: "dumbbell-row.gif", class: "good", reps: "3 series x 12 reps por brazo" }
-                ]
-            },
-            {
-                day: "Día 2: Piernas",
-                icon: "fi-rr-shoe-prints",
-                exercises: [
-                    { name: "Leg Extension", tier: "GOAT", img: "leg-extension.gif", class: "goat", reps: "4 series x 15 reps" },
-                    { name: "Leg Press", tier: "Most Effective", img: "leg-press.gif", class: "effective", reps: "4 series x 10-12 reps" },
-                    { name: "Dumbbell Squat (Goblet)", tier: "Good", img: "goblet-squat.gif", class: "good", reps: "4 series x 12 reps" },
-                    { name: "Seated Leg Curl", tier: "Most Effective", img: "seated-leg-curl.gif", class: "effective", reps: "3 series x 12-15 reps" },
-                    { name: "Standing Calf Raise", tier: "Most Effective", img: "standing-calf-raise.gif", class: "effective", reps: "4 series x 20 reps" },
-                    { name: "Hip Adduction", tier: "Good", img: "hip-adduction.gif", class: "good", reps: "3 series x 15 reps" }
-                ]
-            },
-            {
-                day: "Día 3: Full Body",
-                icon: "fi-rr-flame",
-                exercises: [
-                    { name: "Lat Pulldown", tier: "GOAT", img: "lat-pulldown.gif", class: "goat", reps: "3 series x 12 reps" },
-                    { name: "Dumbbell Bench Press", tier: "Most Effective", img: "dumbbell-bench-press.gif", class: "effective", reps: "3 series x 12 reps" },
-                    { name: "Leg Press", tier: "Most Effective", img: "leg-press.gif", class: "effective", reps: "3 series x 12 reps" },
-                    { name: "Dumbbell Lateral Raise", tier: "Most Effective", img: "dumbbell-lateral-raise.gif", class: "effective", reps: "4 series x 15 reps" },
-                    { name: "Tricep Pushdown", tier: "Most Effective", img: "tricep-pushdown.gif", class: "effective", reps: "3 series x 15 reps" },
-                    { name: "Dumbbell Bicep Curl", tier: "Most Effective", img: "dumbbell-bicep-curl.gif", class: "effective", reps: "3 series x 12 reps" }
-                ]
-            },
-            {
-                day: "Día 4: Bíceps y Tríceps (Opcional)",
-                icon: "fi-rr-body-building",
-                exercises: [
-                    { name: "Tricep Pushdown (Bar)", tier: "Most Effective", img: "tricep-pushdown-bar.gif", class: "effective", reps: "4 series x 12 reps" },
-                    { name: "Dumbbell Bicep Curl", tier: "Most Effective", img: "dumbbell-bicep-curl.gif", class: "effective", reps: "4 series x 12 reps" },
-                    { name: "Overhead Cable Tricep Ext.", tier: "Most Effective", img: "overhead-cable-tricep.gif", class: "effective", reps: "3 series x 12 reps" },
-                    { name: "Dumbbell Hammer Curl", tier: "Most Effective", img: "hammer-curl.gif", class: "effective", reps: "3 series x 12 reps" },
-                    { name: "Cable Curl", tier: "Good", img: "cable-curl.gif", class: "good", reps: "3 series x 15 reps" },
-                    { name: "Tricep Pushdown (Rope)", tier: "Good", img: "tricep-pushdown-rope.gif", class: "good", reps: "3 series x 15 reps" }
-                ]
-            }
-        ];
+  <p class="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-md mx-auto">
+    Rutina de <strong class="text-zinc-200">4 días</strong> enfocada en hipertrofia, tonificación y pérdida de grasa.
+    Sigue la técnica con las animaciones y marca cada serie completada.
+  </p>
 
-        const app = document.getElementById('app');
+  <!-- Leyenda -->
+  <div class="flex flex-wrap justify-center gap-2 mt-5">
+    <div class="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 rounded-full border border-zinc-800">
+      <span class="w-2.5 h-2.5 rounded-full badge-goat shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+      <span class="text-[11px] font-semibold text-zinc-300">GOAT</span>
+    </div>
+    <div class="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 rounded-full border border-zinc-800">
+      <span class="w-2.5 h-2.5 rounded-full badge-effective shadow-[0_0_8px_rgba(249,115,22,0.6)]"></span>
+      <span class="text-[11px] font-semibold text-zinc-300">Effective</span>
+    </div>
+    <div class="flex items-center gap-1.5 px-2.5 py-1 bg-zinc-900 rounded-full border border-zinc-800">
+      <span class="w-2.5 h-2.5 rounded-full badge-good shadow-[0_0_8px_rgba(234,179,8,0.6)]"></span>
+      <span class="text-[11px] font-semibold text-zinc-300">Good</span>
+    </div>
+  </div>
+</header>
 
-        routine.forEach(day => {
-            let html = `<div class="day-container">
-                <h2 class="day-title"><i class="fi ${day.icon}"></i> ${day.day}</h2>
-                
-                <div class="routine-block special">
-                    <div class="exercise-img" style="background: transparent"><i class="fi fi-rr-person-running" style="color: var(--cardio-color);"></i></div>
-                    <div class="exercise-info">
-                        <h3>Calentamiento</h3>
-                        <p>5 minutos de movilidad articular</p>
-                    </div>
-                </div>`;
+<!-- ================= TABS ================= -->
+<nav id="dayTabs" class="sticky top-0 z-30 bg-zinc-950/85 backdrop-blur-xl border-b border-zinc-800/60">
+  <div class="max-w-3xl mx-auto px-3 py-2">
+    <div class="flex gap-1.5 p-1 bg-zinc-900/60 rounded-2xl border border-zinc-800/60">
+      <!-- Generado por JS -->
+    </div>
+  </div>
+</nav>
 
-            day.exercises.forEach(ex => {
-                // Función fallback: si la imagen de GitHub no existe, carga un ícono genérico de Flaticon
-                html += `
-                <div class="routine-block">
-                    <img src="${repoBaseUrl}${ex.img}" alt="${ex.name}" class="exercise-img" loading="lazy" onerror="this.onerror=null; this.outerHTML='<div class=\\'exercise-img\\'><i class=\\'fi fi-rr-gym\\'></i></div>';">
-                    <div class="exercise-info">
-                        <h3>${ex.name}</h3>
-                        <p><i class="fi fi-rr-rotate-right"></i> ${ex.reps}</p>
-                        <span class="badge ${ex.class}">${ex.tier}</span>
-                    </div>
-                </div>`;
-            });
+<!-- ================= CONTENIDO ================= -->
+<main id="main" class="max-w-3xl mx-auto px-4 mt-5"></main>
 
-            html += `
-                <div class="routine-block special">
-                    <div class="exercise-img" style="background: transparent"><i class="fi fi-rr-heart-rate" style="color: var(--cardio-color);"></i></div>
-                    <div class="exercise-info">
-                        <h3>Cardio Final</h3>
-                        <p>20 minutos (Cinta, Elíptica o Bici)</p>
-                    </div>
-                </div>
-            </div>`;
+<!-- ================= FOOTER ================= -->
+<footer class="max-w-3xl mx-auto mt-10 text-center text-zinc-500 text-xs px-4">
+  <p class="flex items-start justify-center gap-2 text-left max-w-md mx-auto leading-relaxed">
+    <span class="text-amber-400 flex-shrink-0 mt-0.5">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;">
+        <path d="M9 18h6"/><path d="M10 22h4"/>
+        <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/>
+      </svg>
+    </span>
+    <span>Llega cerca del fallo muscular en las últimas repeticiones manteniendo técnica correcta. Descansa <strong class="text-zinc-300">60–90 s</strong> entre series.</span>
+  </p>
+  <p class="mt-4 text-zinc-600">Rutina Gym Pro · Instálala desde el menú del navegador</p>
+</footer>
 
-            app.innerHTML += html;
-        });
+<!-- ================= LIGHTBOX ================= -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true">
+  <button id="lightboxClose" class="lightbox-close" aria-label="Cerrar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:20px;height:20px;">
+      <path d="M18 6 6 18M6 6l12 12"/>
+    </svg>
+  </button>
+  <img id="lightboxImg" src="" alt="">
+</div>
 
-        // Registrar Service Worker para PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registrado', reg))
-                    .catch(err => console.error('Error al registrar SW', err));
-            });
-        }
-    </script>
+<!-- ============================================================
+     SCRIPT PRINCIPAL
+     ============================================================ -->
+<script>
+/* =========================================================
+   1. MANIFEST DINÁMICO (data URI generado al vuelo)
+   ========================================================= */
+(function injectManifest() {
+  const manifest = {
+    name: "Rutina Gym Pro · Tier List",
+    short_name: "Gym Pro",
+    description: "Rutina de 4 días enfocada en hipertrofia, tonificación y pérdida de grasa.",
+    start_url: "./",
+    scope: "./",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#09090b",
+    theme_color: "#09090b",
+    lang: "es",
+    categories: ["health", "fitness", "sports"],
+    icons: [
+      {
+        src: "https://cdn-icons-png.flaticon.com/512/2964/2964514.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any maskable"
+      }
+    ]
+  };
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+  document.head.appendChild(link);
+})();
+
+/* =========================================================
+   2. DATOS DE LA RUTINA
+   ---------------------------------------------------------
+   `file` = nombre base del archivo, sin extensión.
+   El GIF estará en  ./videos/{file}.gif
+   La imagen en       ./images/{file}.jpg
+   ========================================================= */
+const RUTINA = [
+  {
+    dia: 1,
+    titulo: "Pecho y Espalda",
+    ejercicios: [
+      { nombre: "Lat Pulldown",       file: "2330-LEprlgG", badge: "goat",      reps: "3 series × 10–12 reps" },
+      { nombre: "Machine Chest Fly",  file: "1262-w4dLzSx", badge: "effective", reps: "3 series × 12–15 reps" },
+      { nombre: "Cable Row",          file: "0861-fUBheHs", badge: "effective", reps: "3 series × 12 reps" },
+      { nombre: "Incline DB Press",   file: "1283-bfiHMpI", badge: "effective", reps: "3 series × 10–12 reps" },
+      { nombre: "DB Bench Press",     file: "0289-SpYC0Kp", badge: "effective", reps: "3 series × 10–12 reps" },
+      { nombre: "Single Arm DB Row",  file: "3156-v2DfH14", badge: "good",      reps: "3 series × 12 reps (c/brazo)" },
+    ]
+  },
+  {
+    dia: 2,
+    titulo: "Piernas Completas",
+    ejercicios: [
+      { nombre: "Leg Extension",      file: "0585-my33uHU", badge: "goat",      reps: "3 series × 12–15 reps" },
+      { nombre: "Leg Press",          file: "1463-2Qh2J1e", badge: "effective", reps: "3 series × 10–12 reps" },
+      { nombre: "DB Goblet Squat",    file: "1760-yn8yg1r", badge: "good",      reps: "3 series × 10–12 reps" },
+      { nombre: "Seated Leg Curl",    file: "0599-Zg3XY7P", badge: "effective", reps: "3 series × 12 reps" },
+      { nombre: "Standing Calf Raise",file: "1373-bJYHBIN", badge: "good",      reps: "3 series × 15–20 reps" },
+      { nombre: "Hip Adduction",      file: "0598-oHsrypV", badge: "good",      reps: "3 series × 15 reps" },
+    ]
+  },
+  {
+    dia: 3,
+    titulo: "Full Body",
+    ejercicios: [
+      { nombre: "Lat Pulldown",       file: "2330-LEprlgG", badge: "goat",      reps: "3 series × 10–12 reps" },
+      { nombre: "DB Bench Press",     file: "0289-SpYC0Kp", badge: "effective", reps: "3 series × 10–12 reps" },
+      { nombre: "Leg Press",          file: "1463-2Qh2J1e", badge: "effective", reps: "3 series × 10–12 reps" },
+      { nombre: "DB Lateral Raise",   file: "0334-DsgkuIt", badge: "effective", reps: "3 series × 12–15 reps" },
+      { nombre: "Tricep Pushdown",    file: "1723-qRZ5S1N", badge: "effective", reps: "3 series × 12 reps" },
+      { nombre: "DB Bicep Curl",      file: "1651-1VpF8db", badge: "effective", reps: "3 series × 10–12 reps" },
+    ]
+  },
+  {
+    dia: 4,
+    titulo: "Bíceps y Tríceps",
+    opcional: true,
+    ejercicios: [
+      { nombre: "Tricep Pushdown",      file: "1723-qRZ5S1N", badge: "effective", reps: "3 series × 12 reps" },
+      { nombre: "DB Bicep Curl",        file: "1651-1VpF8db", badge: "effective", reps: "3 series × 10–12 reps" },
+      { nombre: "Overhead Tricep Ext.", file: "1722-1xHyxys", badge: "effective", reps: "3 series × 12 reps" },
+      { nombre: "DB Hammer Curl",       file: "0313-slDvUAU", badge: "effective", reps: "3 series × 12 reps" },
+      { nombre: "Cable Curl",           file: "0868-G08RZcQ", badge: "good",      reps: "3 series × 12 reps" },
+      { nombre: "Tricep Pushdown Rope", file: "0200-dU605di", badge: "good",      reps: "3 series × 12 reps" },
+    ]
+  }
+];
+
+/* =========================================================
+   3. ESTADO / PROGRESO (localStorage)
+   ========================================================= */
+const STORAGE_KEY = "gym-progress-v1";
+let done = new Set();
+try {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) done = new Set(JSON.parse(raw));
+} catch (e) { /* noop */ }
+
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...done])); } catch (e) {}
+}
+function exId(dia, idx) { return `d${dia}-e${idx}`; }
+function isDone(dia, idx) { return done.has(exId(dia, idx)); }
+
+/* =========================================================
+   4. SVG helpers
+   ========================================================= */
+const ICON = {
+  warmup: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="M12 6v6"/><path d="M12 12l-4 8"/><path d="M12 12l4 8"/><path d="M7 6.5 12 9l5-2.5"/></svg>`,
+  cardio: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.2 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.3"/></svg>`,
+  dumbbell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11"/><path d="M17.5 6.5v11"/><path d="M3 9v6"/><path d="M21 9v6"/><path d="M6.5 12h11"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  flame: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`,
+  reset: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>`
+};
+
+/* =========================================================
+   5. RENDER
+   ========================================================= */
+const $main = document.getElementById('main');
+const $tabs = document.getElementById('dayTabs').querySelector('div');
+let activeDay = parseInt(localStorage.getItem('gym-active-day') || '1', 10);
+if (![1,2,3,4].includes(activeDay)) activeDay = 1;
+
+function badgeClass(badge) {
+  return badge === 'goat' ? 'badge-goat'
+       : badge === 'effective' ? 'badge-effective'
+       : 'badge-good';
+}
+function badgeLabel(badge) {
+  return badge === 'goat' ? 'GOAT'
+       : badge === 'effective' ? 'EFFECTIVE'
+       : 'GOOD';
+}
+
+function progressFor(dayIdx) {
+  const day = RUTINA.find(d => d.dia === dayIdx);
+  if (!day) return { done: 0, total: 0 };
+  let d = 0;
+  day.ejercicios.forEach((_, i) => { if (isDone(dayIdx, i)) d++; });
+  return { done: d, total: day.ejercicios.length };
+}
+
+function renderTabs() {
+  $tabs.innerHTML = RUTINA.map(d => {
+    const { done: d, total } = progressFor(d.dia);
+    const selected = d.dia === activeDay;
+    return `
+      <button class="day-tab" role="tab" aria-selected="${selected}" data-day="${d.dia}">
+        <span class="tab-label">Día ${d.dia}</span>
+        <span class="tab-progress">${d}/${total}</span>
+      </button>
+    `;
+  }).join('');
+
+  $tabs.querySelectorAll('.day-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeDay = parseInt(btn.dataset.day, 10);
+      localStorage.setItem('gym-active-day', activeDay);
+      renderTabs();
+      renderDay();
+    });
+  });
+}
+
+function renderDay() {
+  const day = RUTINA.find(d => d.dia === activeDay);
+  if (!day) return;
+
+  const { done: dCount, total } = progressFor(day.dia);
+  const pct = total ? Math.round((dCount / total) * 100) : 0;
+
+  const exercisesHtml = day.ejercicios.map((ex, i) => {
+    const isD = isDone(day.dia, i);
+    const gifSrc  = `./videos/${ex.file}.gif`;
+    const imgSrc  = `./images/${ex.file}.jpg`;
+    return `
+      <article class="ex-card card-hover bg-zinc-900/60 border border-zinc-800 rounded-2xl overflow-hidden flex items-stretch ${isD ? 'done' : ''}" data-idx="${i}">
+        <div class="thumb cursor-pointer" data-gif="${gifSrc}" data-img="${imgSrc}" data-name="${ex.nombre}">
+          <img src="${gifSrc}" alt="${ex.nombre}" loading="lazy" decoding="async" class="ex-gif">
+          <div class="ph">${ICON.dumbbell}</div>
+        </div>
+
+        <div class="p-3 flex-1 min-w-0 flex flex-col justify-center gap-1.5">
+          <div class="flex justify-between items-start gap-2">
+            <h3 class="ex-name font-bold text-[15px] text-zinc-100 leading-tight pr-1">${ex.nombre}</h3>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-md ${badgeClass(ex.badge)} whitespace-nowrap flex-shrink-0">${badgeLabel(ex.badge)}</span>
+          </div>
+          <p class="text-xs text-zinc-400">${ex.reps}</p>
+        </div>
+
+        <div class="pr-3 flex items-center">
+          <button class="check-btn" role="checkbox" aria-checked="${isD}" aria-label="Marcar ${ex.nombre}" data-check="${i}">
+            ${ICON.check}
+          </button>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  $main.innerHTML = `
+    <section class="fade-in">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+            Día ${day.dia}
+            ${day.opcional ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wide">Opcional</span>' : ''}
+          </h2>
+          <p class="text-xs uppercase tracking-widest font-semibold text-zinc-500 mt-0.5">${day.titulo}</p>
+        </div>
+        <button id="resetDay" class="text-zinc-500 hover:text-zinc-300 p-2 rounded-lg transition" title="Reiniciar día" aria-label="Reiniciar día">
+          ${ICON.reset}
+        </button>
+      </div>
+
+      <!-- Progreso -->
+      <div class="mb-5">
+        <div class="flex justify-between items-center mb-1.5">
+          <span class="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">Progreso</span>
+          <span class="text-[11px] font-bold text-zinc-300">${dCount}/${total} · ${pct}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+
+      <!-- Calentamiento -->
+      <div class="bg-blue-950/40 border border-blue-900/50 rounded-2xl p-3 flex items-center gap-3 mb-3">
+        <span class="icon-box text-blue-400">${ICON.warmup}</span>
+        <div>
+          <p class="font-bold text-blue-400 text-sm">5 min Calentamiento</p>
+          <p class="text-xs text-zinc-400">Movilidad articular</p>
+        </div>
+      </div>
+
+      <!-- Ejercicios -->
+      <div class="flex flex-col gap-3">
+        ${exercisesHtml}
+      </div>
+
+      <!-- Cardio -->
+      <div class="bg-emerald-950/40 border border-emerald-900/50 rounded-2xl p-3 flex items-center gap-3 mt-3">
+        <span class="icon-box text-emerald-400">${ICON.cardio}</span>
+        <div>
+          <p class="font-bold text-emerald-400 text-sm">20 min Cardio</p>
+          <p class="text-xs text-zinc-400">Moderado (Cinta / Bici)</p>
+        </div>
+      </div>
+    </section>
+  `;
+
+  // Wiring
+  $main.querySelectorAll('.check-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.check, 10);
+      const id = exId(day.dia, idx);
+      if (done.has(id)) done.delete(id); else done.add(id);
+      saveProgress();
+      renderTabs();
+      renderDay();
+    });
+  });
+
+  $main.querySelectorAll('.thumb').forEach(th => {
+    th.addEventListener('click', () => openLightbox(th.dataset.gif, th.dataset.img, th.dataset.name));
+  });
+
+  const reset = document.getElementById('resetDay');
+  if (reset) {
+    reset.addEventListener('click', () => {
+      day.ejercicios.forEach((_, i) => done.delete(exId(day.dia, i)));
+      saveProgress();
+      renderTabs();
+      renderDay();
+    });
+  }
+
+  // Fallback de imágenes
+  $main.querySelectorAll('img.ex-gif').forEach(img => {
+    img.addEventListener('error', () => {
+      const th = img.closest('.thumb');
+      if (th) th.classList.add('failed');
+      // Fallback a la imagen estática
+      const thumb = img.closest('.thumb');
+      if (thumb && !thumb.dataset.triedImg) {
+        thumb.dataset.triedImg = '1';
+        img.src = thumb.dataset.img;
+      }
+    }, { once: true });
+  });
+}
+
+/* =========================================================
+   6. LIGHTBOX
+   ========================================================= */
+const $lb = document.getElementById('lightbox');
+const $lbImg = document.getElementById('lightboxImg');
+const $lbClose = document.getElementById('lightboxClose');
+
+function openLightbox(gif, img, name) {
+  $lbImg.src = gif;
+  $lbImg.alt = name;
+  $lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  $lb.classList.remove('open');
+  $lbImg.src = '';
+  document.body.style.overflow = '';
+}
+$lbClose.addEventListener('click', closeLightbox);
+$lb.addEventListener('click', (e) => { if (e.target === $lb) closeLightbox(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+/* =========================================================
+   7. INIT
+   ========================================================= */
+renderTabs();
+renderDay();
+
+/* =========================================================
+   8. SERVICE WORKER (offline)
+   ========================================================= */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('✅ SW registrado:', reg.scope))
+      .catch(err => console.warn('SW no registrado:', err));
+  });
+}
+</script>
 </body>
 </html>
